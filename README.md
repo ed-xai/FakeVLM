@@ -47,6 +47,13 @@
 
 * Download the model using this command: ```huggingface-cli download lingcco/fakeVLM --local-dir ./FakeVLM_Model```.
 
+* You can use ```eval_single_image.py``` to run a single-image evaluation. For this, you need a GPU with at least **14GB of VRAM**. To run the script, use: 
+```
+python eval_single_image.py \
+  --model_path ./FakeVLM_Model \
+  --image_path ./imgs/sample_0.png \
+  --prompt "USER: <image>\nIs this image real or fake? Please explain your reasoning in detail.\n"
+```
 
 ## 📰 News
 - **[2025.9.24]**: 🎉 FakeVLM was accepted to NeurIPS 2025! 
