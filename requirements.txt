@@ -20,7 +20,7 @@ fonttools==4.60.0
 fsspec==2025.9.0
 gitdb==4.0.12
 GitPython==3.1.45
-gradio==5.46.11
+gradio==5.46.1
 gradio_client==1.13.1
 groovy==0.1.2
 h11==0.16.0
@@ -59,7 +59,7 @@ orjson==3.11.3
 packaging==25.0
 pandas==2.3.2
 peft==0.17.1
-pillow @ file:///home/conda/feedstock_root/build_artifacts/bld/rattler-build_pillow_1758208668/work
+pillow==10.3.0
 platformdirs==4.4.0
 protobuf==6.32.1
 psutil==7.1.0
