@@ -41,6 +41,8 @@
 
 * The ```requirements.txt``` has been updated to resolve installation errors caused by local absolute paths in the upstream repository. Standardized version numbers have been applied to ```av```, ```numpy```, ```gradio```, and ```pillow``` to ensure seamless cross-platform installation.
 
+* If you encounter a missing nvcc (NVIDIA CUDA Compiler) error during the final installation steps (such as when building flash-attn), please install it directly into your Conda environment by running - ```conda install -c nvidia cuda-nvcc```
+
 ## 📰 News
 - **[2025.9.24]**: 🎉 FakeVLM was accepted to NeurIPS 2025! 
 - **[2025.4.15]**: 🤗 We are excited to release the FakeClue dataset. Check out [here](https://huggingface.co/datasets/lingcco/FakeClue).
