@@ -55,6 +55,11 @@ python eval_single_image.py \
   --prompt "USER: <image>\nIs this image real or fake? Please explain your reasoning in detail.\n"
 ```
 
+* To download the **FakeClue** dataset, use the following command:
+```
+  huggingface-cli download lingcco/FakeClue --repo-type dataset --local-dir ./FakeClue_Data
+```
+
 ## 📰 News
 - **[2025.9.24]**: 🎉 FakeVLM was accepted to NeurIPS 2025! 
 - **[2025.4.15]**: 🤗 We are excited to release the FakeClue dataset. Check out [here](https://huggingface.co/datasets/lingcco/FakeClue).
