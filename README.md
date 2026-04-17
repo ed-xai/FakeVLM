@@ -47,13 +47,34 @@
 
 * Download the model using this command: ```huggingface-cli download lingcco/fakeVLM --local-dir ./FakeVLM_Model```.
 
-* You can use ```eval_single_image.py``` to run a single-image evaluation. For this, you need a GPU with at least **14GB of VRAM**. To run the script, use: 
+* You can use ```eval_single_image.py``` to run a single-image evaluation. The script supports GPU, CPU, and quantized inference. Usage:
 ```
 python eval_single_image.py \
   --model_path ./FakeVLM_Model \
   --image_path ./imgs/sample_0.png \
-  --prompt "USER: <image>\nIs this image real or fake? Please explain your reasoning in detail.\n"
+  --prompt "USER: <image>\nIs this image real or fake? Please explain your reasoning in detail.\n" \
+  --device auto \
+  --quantization none
 ```
+
+  **Command line options:**
+
+  | Argument | Default | Description |
+  |---|---|---|
+  | `--model_path` | *(required)* | Path to the FakeVLM model directory |
+  | `--image_path` | *(required)* | Path to the image to evaluate |
+  | `--prompt` | `"USER: <image>\nIs this image real or fake? Explain why. ASSISTANT:"` | Prompt for the model |
+  | `--device` | `auto` | Device to run on: `auto` (picks GPU if available), `cpu`, or `cuda` |
+  | `--quantization` | `none` | Quantization mode: `none`, `cuda-4bit`, or `cuda-8bit` (GPU only) |
+
+  **Device and quantization guide:**
+
+  | Scenario | Flags | VRAM/RAM required |
+  |---|---|---|
+  | GPU with >= 14GB VRAM | `--device cuda` | ~14GB VRAM |
+  | GPU with 8GB VRAM (e.g. RTX 2070) | `--quantization cuda-4bit` | ~3.5GB VRAM |
+  | GPU with 8GB VRAM | `--quantization cuda-8bit` | ~7GB VRAM |
+  | CPU only | `--device cpu` | ~28GB RAM |
 
 * To download the **FakeClue** dataset, use the following command:
 ```
