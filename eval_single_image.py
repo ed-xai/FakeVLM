@@ -15,18 +15,23 @@ def load_model(model_path):
     print(f"Loading model from {model_path}...")
     
     # Load processor
-    processor = AutoProcessor.from_pretrained("llava-hf/llava-1.5-7b-hf", revision='a272c74')
+    processor = AutoProcessor.from_pretrained(model_path)
     
     # Load model
-    model = LlavaForConditionalGeneration.from_pretrained(
-        model_path, 
-        torch_dtype=torch.bfloat16, 
-        low_cpu_mem_usage=True, 
-        use_flash_attention_2=True, # Ensure flash-attn is installed
+    use_cuda = torch.cuda.is_available()
+    model_kwargs = dict(
+        low_cpu_mem_usage=True,
         revision='a272c74',
     )
-    
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    if use_cuda:
+        model_kwargs["torch_dtype"] = torch.bfloat16
+        model_kwargs["attn_implementation"] = "flash_attention_2"
+    else:
+        model_kwargs["torch_dtype"] = torch.float32
+
+    model = LlavaForConditionalGeneration.from_pretrained(model_path, **model_kwargs)
+
+    device = torch.device('cuda' if use_cuda else 'cpu')
     model.to(device)
     model.eval()
     
