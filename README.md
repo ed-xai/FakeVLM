@@ -81,6 +81,19 @@ python eval_single_image.py \
   huggingface-cli download lingcco/FakeClue --repo-type dataset --local-dir ./FakeClue_Data
 ```
 
+* For batch evaluation on the `FakeClue` test set, use `run_test_eval.py`. It loads images from the test folder, performs FakeVLM inference for each sample listed in `test.json`, and saves the generated responses to a new JSON file. Each response is stored under the key `fakevlm_{quantization}` and includes the inference time.
+
+  Run with (adjust paths as needed):
+
+  ```bash
+  python run_test_eval.py \
+    --data_json_path ./FakeClue_Data/data_json/test.json \
+    --image_base_path ./FakeClue_Data/images/test \
+    --model_path ./FakeVLM_Model \
+    --device auto \
+    --quantization none \
+    --output_path ./FakeClue_Data/data_json/test_with_outputs.json
+
 ## 📰 News
 - **[2025.9.24]**: 🎉 FakeVLM was accepted to NeurIPS 2025! 
 - **[2025.4.15]**: 🤗 We are excited to release the FakeClue dataset. Check out [here](https://huggingface.co/datasets/lingcco/FakeClue).
