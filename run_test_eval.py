@@ -1,4 +1,5 @@
 import os
+from platform import processor
 import time
 import json
 import torch
@@ -10,12 +11,12 @@ from eval_single_image import load_model
 To run the code use:
 
 python run_test_eval.py \
-    --data_json_path /path/to/FakeClue_Data/test.json \
-    --image_base_path /path/to/FakeClue_Data/images \
-    --model_path /path/to/fakevlm/model \
+    --data_json_path /path/to/FakeClue_Data/data_json/test.json \
+    --image_base_path /path/to/FakeClue_Data/test \
+    --model_path /path/to/FakeVLM_Model \
     --quantization none \
     --device auto \
-    --output_path /path/to/save/updated_test.json
+    --output_path new_test.json
 
 """
 
@@ -51,11 +52,6 @@ def process_fakeclue_with_fakevlm(
     
     # Create model identifier string
     model_name = f'fakevlm_{quantization}'
-    # model_name = "fakevlm"
-    # if quantization != "none":
-    #     model_name = f"{model_name} + {quantization}"
-    # else:
-    #     model_name = f"{model_name}_none"
 
     # Ensure final directory
     norm_image_base_path = os.path.normpath(image_base_path)
@@ -99,13 +95,9 @@ def process_fakeclue_with_fakevlm(
             with torch.no_grad():
                 output = model.generate(**inputs, max_new_tokens=256)
             elapsed = time.time() - start_time
-            
-            # Decode response
-            response = processor.decode(output[0], skip_special_tokens=True)
-            
-            # Clean up the prompt from the response if necessary
-            if "ASSISTANT:" in response:
-                response = response.split("ASSISTANT:")[-1].strip()
+
+            generated_ids = output[0][inputs["input_ids"].shape[1]:]
+            response = processor.decode(generated_ids, skip_special_tokens=True).strip()
             
             # Add FakeVLM response to conversations
             entry["conversations"].append({
@@ -123,7 +115,10 @@ def process_fakeclue_with_fakevlm(
             print(f"Error processing {entry.get('image', 'unknown')}: {str(e)}")
             failed_count += 1
             continue
-    
+        
+        # one case checking
+        # break
+
     # Save updated test.json
     if output_path is None:
         output_path = data_json_path
