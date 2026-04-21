@@ -39,6 +39,8 @@
 
 ## Updates ed-xai
 
+* Added ```.venv\``` folder path to gitignore for creation of direct python venvs rather that only conda support
+
 * The ```requirements.txt``` has been updated to resolve installation errors caused by local absolute paths in the upstream repository. Standardized version numbers have been applied to ```av```, ```numpy```, ```gradio```, and ```pillow``` to ensure seamless cross-platform installation.
 
 * If you encounter a missing nvcc (NVIDIA CUDA Compiler) error during the final installation steps (such as when building flash-attn), please install it directly into your Conda environment by running - ```conda install -c nvidia cuda-nvcc```
