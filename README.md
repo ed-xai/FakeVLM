@@ -41,6 +41,8 @@
 
 * Added ```.venv\``` folder path to gitignore for creation of direct python venvs rather that only conda support
 
+* On **Windows**, `deepspeed` is now excluded from `requirements.txt` by default because source builds frequently fail in local venv setups. This does not affect single-image inference (`eval_single_image.py`). If you need distributed training with DeepSpeed, use Linux/WSL or install DeepSpeed separately in a compatible environment.
+
 * The ```requirements.txt``` has been updated to resolve installation errors caused by local absolute paths in the upstream repository. Standardized version numbers have been applied to ```av```, ```numpy```, ```gradio```, and ```pillow``` to ensure seamless cross-platform installation.
 
 * If you encounter a missing nvcc (NVIDIA CUDA Compiler) error during the final installation steps (such as when building flash-attn), please install it directly into your Conda environment by running - ```conda install -c nvidia cuda-nvcc```
