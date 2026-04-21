@@ -4,6 +4,7 @@ import torch
 import argparse
 from PIL import Image
 from transformers import AutoProcessor, LlavaForConditionalGeneration, BitsAndBytesConfig
+from projector_capture import register_projector_capture_hook
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Single Image Inference for FakeVLM")
@@ -15,6 +16,12 @@ def parse_args():
                         help="Quantization mode: none (default), cuda-4bit/cuda-8bit (GPU only)")
     parser.add_argument("--device", default="auto", choices=["auto", "cpu", "cuda"],
                         help="Device to run on: auto (default), cpu, or cuda")
+    parser.add_argument("--capture_projector_output", action="store_true",
+                        help="Capture and save the multi_modal_projector output tensor during forward")
+    parser.add_argument("--projector_save_dir", default="./projector_captures", type=str,
+                        help="Root directory used to save projector output captures")
+    parser.add_argument("--projector_max_saves", default=1, type=int,
+                        help="Maximum number of projector outputs to save during generation")
     return parser.parse_args()
 
 def load_model(model_path, quantization="none", device_choice="auto"):
@@ -112,8 +119,25 @@ def infer_single_image(processor, model, device, image_path, prompt_text):
     
 def main():
     args = parse_args()
+    if args.projector_max_saves < 1:
+        raise ValueError("--projector_max_saves must be >= 1")
+
     processor, model, device = load_model(args.model_path, args.quantization, args.device)
-    infer_single_image(processor, model, device, args.image_path, args.prompt)
+    hook_handle, _run_dir = register_projector_capture_hook(
+        model=model,
+        enabled=args.capture_projector_output,
+        save_root_dir=args.projector_save_dir,
+        max_saves=args.projector_max_saves,
+        image_path=args.image_path,
+        prompt_text=args.prompt,
+    )
+
+    try:
+        infer_single_image(processor, model, device, args.image_path, args.prompt)
+    finally:
+        if hook_handle is not None:
+            hook_handle.remove()
+            print("[projector-hook] Hook removed")
 
 if __name__ == "__main__":
     main()
