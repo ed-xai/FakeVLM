@@ -27,3 +27,6 @@ example_data/videos/ego4d/*.mp4
 
 /FakeVLM_Model/
 /FakeClue_Data/
+
+# projector_capture
+projector_captures/
